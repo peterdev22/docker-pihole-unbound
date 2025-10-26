@@ -1,0 +1,26 @@
+# Example compose.yaml similar to: https://github.com/pi-hole/docker-pi-hole#quick-start
+
+services:
+  pihole-unbound:
+    container_name: pihole-unbound
+    image: ghcr.io/peterdev22/pihole-unbound:latest
+    ports:
+      - "53:53/tcp"     # DNS
+      - "53:53/udp"     # DNS
+      - "80:80/tcp"     # HTTP
+      - "443:443/tcp"   # HTTPS
+      # - "67:67/udp"   # Only required if using Pi-hole's DHCP server
+      # - "123:123/udp" # Only required if using Pi-hole's NTP server
+    environment:
+      # FTL config variables (https://docs.pi-hole.net/ftldns/configfile)
+      TZ: 'Australia/Adelaide'                      # Timezone
+      FTLCONF_webserver_api_password: 'change_this' # Password
+      FTLCONF_dns_upstreams: '127.0.0.1#5335'       # Sets DNS upstream to Unbound
+      FTLCONF_dns_listeningMode: 'all'              # Listen on all interfaces, required for Docker's bridge network
+    volumes:
+      - './etc-pihole:/etc/pihole'
+    cap_add:
+      - NET_ADMIN   # Required to avoid an Unbound warning; also required if using Pi-hole's DHCP server
+      - SYS_TIME    # Required if using Pi-hole's NTP server
+      - SYS_NICE    # Optional; provides Pi-hole more processing time
+    restart: unless-stopped
