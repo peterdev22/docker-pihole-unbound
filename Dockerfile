@@ -2,6 +2,9 @@
 # https://github.com/pi-hole/docker-pi-hole/pkgs/container/pihole
 FROM ghcr.io/pi-hole/pihole:2025.10.0
 
+# Link to repo
+LABEL org.opencontainers.image.source=https://github.com/peterdev22/docker-pihole-unbound
+
 # Install unbound
 RUN apk add --no-cache unbound
 
