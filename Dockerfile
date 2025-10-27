@@ -1,5 +1,5 @@
 # Based on the offical Pi-hole Docker image: https://github.com/pi-hole/docker-pi-hole/pkgs/container/pihole
-FROM ghcr.io/pi-hole/pihole:2025.10.0
+FROM ghcr.io/pi-hole/pihole:2025.10.1
 
 # Install Unbound
 RUN apk add --no-cache unbound
