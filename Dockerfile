@@ -1,4 +1,4 @@
-# Start with the offical Pi-hole image (https://github.com/pi-hole/docker-pi-hole/pkgs/container/pihole)
+# Based on the offical Pi-hole Docker image: https://github.com/pi-hole/docker-pi-hole/pkgs/container/pihole
 FROM ghcr.io/pi-hole/pihole:2025.10.0
 
 # Install Unbound

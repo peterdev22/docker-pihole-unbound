@@ -1,4 +1,4 @@
-# Example compose.yaml similar to: https://github.com/pi-hole/docker-pi-hole#quick-start
+# My Docker compose, similar to: https://github.com/pi-hole/docker-pi-hole#quick-start
 
 services:
   pihole-unbound:
@@ -9,18 +9,17 @@ services:
       - "53:53/udp"     # DNS
       - "80:80/tcp"     # HTTP
       - "443:443/tcp"   # HTTPS
-      # - "67:67/udp"   # Only required if using Pi-hole's DHCP server
-      # - "123:123/udp" # Only required if using Pi-hole's NTP server
+      # - "67:67/udp"   # DHCP (optional)
+      - "123:123/udp"   # NTP (optional)
     environment:
-      # FTL config variables (https://docs.pi-hole.net/ftldns/configfile)
-      TZ: 'Australia/Adelaide'                      # Timezone
-      FTLCONF_webserver_api_password: 'change_this' # Password
-      FTLCONF_dns_upstreams: '127.0.0.1#5335'       # Sets DNS upstream to Unbound
-      FTLCONF_dns_listeningMode: 'all'              # Listen on all interfaces, required for Docker's bridge network
+      TZ: ${TZ}                                  # Timezone
+      FTLCONF_webserver_api_password: ${WEB_PW}  # Password
+      FTLCONF_dns_upstreams: '127.0.0.1#5335'    # Set DNS upstream to Unbound
+      FTLCONF_dns_listeningMode: 'all'           # Listen on all interfaces - required for Docker's bridge network
     volumes:
-      - './etc-pihole:/etc/pihole'
+      - './etc-pihole:/etc/pihole'  # Store data between container upgrades
     cap_add:
-      - NET_ADMIN   # Required to avoid an Unbound warning; also required if using Pi-hole's DHCP server
-      - SYS_TIME    # Required if using Pi-hole's NTP server
-      - SYS_NICE    # Optional; provides Pi-hole more processing time
+      - NET_ADMIN  # Network-related operations for Unbound and Pi-hole's DHCP server
+      - SYS_TIME   # Set system time using Pi-hole's NTP server
+      - SYS_NICE   # Increase Pi-hole's process priority
     restart: unless-stopped
